@@ -29,12 +29,18 @@
 <meta property="og:site_name" content="小猫杂货铺">
 <meta property="og:description" content="作为NLP领域里程碑式的作品，对于其深刻的理解是很多后续学习工作的基础，更是面试找工作的利器。">
 <meta property="og:locale">
+<meta property="og:image" content="https://wj-mcat.github.io/images/2021.05/bert-overall.png">
+<meta property="og:image" content="https://wj-mcat.github.io/images/2021.05/transformer.png">
+<meta property="og:image" content="https://wj-mcat.github.io/images/2021.05/transformer-data-flow.png">
+<meta property="og:image" content="https://wj-mcat.github.io/images/2021.05/transformer-encoder-layer.png">
+<meta property="og:image" content="https://wj-mcat.github.io/images/2021.05/transformer-multi-head.png">
 <meta property="article:published_time" content="2021-04-28T03:13:00.000Z">
-<meta property="article:modified_time" content="2021-05-07T05:52:17.556Z">
+<meta property="article:modified_time" content="2021-05-08T06:10:14.948Z">
 <meta property="article:author" content="吴京京">
 <meta property="article:tag" content="nlp">
 <meta property="article:tag" content="bert">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wj-mcat.github.io/images/2021.05/bert-overall.png">
 
 <link rel="canonical" href="https://wj-mcat.github.io/2021/04/28/nlp/pretrained-language-model/bert/">
 
@@ -200,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-07 13:52:17" itemprop="dateModified" datetime="2021-05-07T13:52:17+08:00">2021-05-07</time>
+                <time title="Modified: 2021-05-08 14:10:14" itemprop="dateModified" datetime="2021-05-08T14:10:14+08:00">2021-05-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,18 +249,83 @@
       
         <p>作为NLP领域里程碑式的作品，对于其深刻的理解是很多后续学习工作的基础，更是面试找工作的利器。</p>
 <span id="more"></span>
-
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>bert</code>是一个基于海量无结构化文本进行深度双向语义建模的预训练模型，通过<code>Mask Language Model</code>和<code>Next Sentence Prediction</code>两种训练任务，学习到文本中丰富的先验知识。实践证明，这些通用先验知识能够应用于各种下游任务，并取得<code>SOTA</code>效果，即使是在<code>low-resource</code>下也能够取得良好的效果。</p>
+<h1>介绍</h1>
+<p><code>bert</code>是一个基于海量无结构化文本进行深度双向语义建模的预训练模型，通过<code>Mask Language Model</code>和<code>Next Sentence Prediction</code>两种训练任务，学习到文本中丰富的先验知识。实践证明，这些通用先验知识能够应用于各种下游任务，并取得<code>SOTA</code>效果，即使是在<code>low-resource</code>下也能够取得良好的效果。</p>
 <p>bert是由一个谷歌AI NLP团队提出：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.04805">《BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding》</a>，是第一个无监督双向语言模型，一经发表就刷新了各大榜单，被定义为里程碑式的模型，让NLP达到了新的高度。</p>
-<h2 id="为什么这么强"><a href="#为什么这么强" class="headerlink" title="为什么这么强"></a>为什么这么强</h2><p>原因有三：</p>
+<h2 id="解决了什么问题">解决了什么问题</h2>
+<p>模型参数数量这么大，必然需要海量的训练语料。从哪里收集这些海量的训练语料？《A Neural Probabilistic Language Model》这篇论文说，每一篇文章，天生是训练语料。难道不需要人工标注吗？回答，不需要。</p>
+<h2 id="为什么这么强">为什么这么强</h2>
+<p>原因有三：</p>
 <ul>
 <li>双向建模</li>
 <li>使用MLM和NSP两种训练技巧</li>
 <li>能够学习到Context-Heavy的Representation</li>
 </ul>
 <p>用一句话来说就是：使用MLM和NSP两种训练技巧，基于双向建模能够学习到丰富上下文Representation。</p>
-<h2 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h2><p>基于Transformer构建模型，bert-base模型当中参数为：L=12, H=768, A=12，参数数量为110M；Bert-Large模型中参数为：L=24, H=1024, A=16，参数数量为：340M。</p>
-<h2 id="训练方法"><a href="#训练方法" class="headerlink" title="训练方法"></a>训练方法</h2><h3 id="Mask-Language-Model"><a href="#Mask-Language-Model" class="headerlink" title="Mask Language Model"></a>Mask Language Model</h3><h3 id="Next-Sentence-Prediction"><a href="#Next-Sentence-Prediction" class="headerlink" title="Next Sentence Prediction"></a>Next Sentence Prediction</h3>
+<h2 id="整体结构">整体结构</h2>
+<p>基于Transformer构建模型，bert-base模型当中参数为：L=12, H=768, A=12，参数数量为110M；Bert-Large模型中参数为：L=24, H=1024, A=16，参数数量为：340M。</p>
+<p><img src="/images/2021.05/bert-overall.png" alt="bert-overall"></p>
+<blockquote>
+<p>Bert其实是分为Encoder和Decoder两个部分，如果只是为了了解Bert是如何工作的，那只需要了解Encoder部分即可。</p>
+</blockquote>
+<p>是由12层的双向Transformer构成，能够进行不同层面的特征抽取，那为了深入到Bert中的细节，那接下来将要介绍一下Bert的细节。</p>
+<h2 id="Transformer">Transformer</h2>
+<p>Transformer是一个基于Attension机制的NLP基础组件，出自于《Attention is All you need》，OpenAI GPT和BERT都是基于Transformer。</p>
+<p>下面我将以数据的流向为线索，来介绍模型中的细节。</p>
+<h3 id="问题定义">问题定义</h3>
+<p>最初Transformer被用来解决翻译的问题，那此时就要求其具备：</p>
+<ul>
+<li>能够步骤输入文本中词与词之间的关系</li>
+<li>能够将以上关系映射到输出文本中</li>
+</ul>
+<p>此时就需要一个Encoder和Decoder来处理这两个问题，结构如下：</p>
+<p><img src="/images/2021.05/transformer.png" alt="transformer"></p>
+<h3 id="数据的流向">数据的流向</h3>
+<p>简化后的结构图如下所示：</p>
+<p><img src="/images/2021.05/transformer-data-flow.png" alt="transformer"></p>
+<blockquote>
+<p>左边Encoder的输入为input sentence，右边Decoder的输入为target sentence，这两者用来做相关相似度计算。</p>
+</blockquote>
+<ol>
+<li>在原始论文中，N为6.</li>
+<li>input sentence每一个单词为token，所以一个输入文本可编码为：<code>input_length</code> * <code>embedding_dim</code></li>
+<li>添加位置信息(positional information)，维度大小同上：<code>input_length</code> * <code>embedding_dim</code></li>
+<li>数据经过N个Encoder之后的输出为：<code>input_length</code> * <code>embedding_dim</code>，数据的原始大小并没有变化</li>
+<li>target sentence进行分词和添加位置信息之后，便输入到Decoder当中，大小为：<code>target_length</code> * <code>embedding_dim</code></li>
+<li>Decoder中的每一层都要使用Encoder的输入，整体输出大小为：<code>target_length</code> * <code>embedding_dim</code></li>
+<li>最后连接一个Linear层，然后其输出大小为：<code>target_length</code> * <code>vocab_size</code></li>
+</ol>
+<p>以上便是Transformer中的数据流向过程，那接下来我将介绍每一个细节。</p>
+<h3 id="输入表示">输入表示</h3>
+<p>input sentence 和 target sentence 都是需要进行编码，最终得到一个<code>input_length</code> * <code>embedding_dim</code>向量，那这是如何得到文本的向量表示的呢？</p>
+<p>主要分为两个步骤：</p>
+<ul>
+<li>Token Embedding</li>
+<li>Encoding of Positions</li>
+</ul>
+<p>原始文本和目标文本的编码过程是一致的。Token Embedding的原理我就不介绍了，与通用的方法一致，Encoding of Positions的原理可用以下公式来表示：</p>
+<h3 id="Encoder-Layer">Encoder Layer</h3>
+<p><img src="/images/2021.05/transformer-encoder-layer.png" alt="transformer"></p>
+<p>其中N个Layer链式连接，上一个的输出就是下一个的输入（而且输入和输出的维度大小一致），通过层级连接，能够捕捉到不同层次之间的上下文关系，这个过程也可以认为是sentence-level并非word-level的建模。</p>
+<h4 id="Multi-Header-Layer">Multi-Header Layer</h4>
+<p><img src="/images/2021.05/transformer-multi-head.png" alt="transformer"></p>
+<p>内部有h个Dot-Product Attention连接：多个独立可学习的参数的特征空间，提升某一层的宽度，提取更多的特征空间。</p>
+<ul>
+<li>multi-head：提取特征的数量</li>
+<li>N-Transformer：提取复杂的特征</li>
+</ul>
+<h2 id="训练方法">训练方法</h2>
+<h3 id="Mask-Language-Model">Mask Language Model</h3>
+<h3 id="Next-Sentence-Prediction">Next Sentence Prediction</h3>
+<hr>
+<p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@mromerocalvo/dissecting-bert-part1-6dcf5360b07f">introduction-for-bert-part-1</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/dissecting-bert/dissecting-bert-part2-335ff2ed9c73">introduction-for-bert-part-2</a></li>
+<li><a target="_blank" rel="noopener" href="https://towardsdatascience.com/intuitive-explanation-of-bert-bidirectional-transformers-for-nlp-cdc1efc69c1e">Intuitive Explanation of BERT- Bidirectional Transformers for NLP</a></li>
+<li><a href=""></a></li>
+</ul>
+
     </div>
 
     
@@ -342,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BC%BA"><span class="nav-number">1.1.</span> <span class="nav-text">为什么这么强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">整体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">训练方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mask-Language-Model"><span class="nav-number">1.3.1.</span> <span class="nav-text">Mask Language Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Next-Sentence-Prediction"><span class="nav-number">1.3.2.</span> <span class="nav-text">Next Sentence Prediction</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">解决了什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BC%BA"><span class="nav-number">1.2.</span> <span class="nav-text">为什么这么强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">整体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer"><span class="nav-number">1.4.</span> <span class="nav-text">Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">问题定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E6%B5%81%E5%90%91"><span class="nav-number">1.4.2.</span> <span class="nav-text">数据的流向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.4.3.</span> <span class="nav-text">输入表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Encoder-Layer"><span class="nav-number">1.4.4.</span> <span class="nav-text">Encoder Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Multi-Header-Layer"><span class="nav-number">1.4.4.1.</span> <span class="nav-text">Multi-Header Layer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">训练方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mask-Language-Model"><span class="nav-number">1.5.1.</span> <span class="nav-text">Mask Language Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Next-Sentence-Prediction"><span class="nav-number">1.5.2.</span> <span class="nav-text">Next Sentence Prediction</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -356,12 +427,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
@@ -452,6 +523,8 @@
 
   
 
+  
+
 <script>
   function loadCount() {
     var d = document, s = d.createElement('script');
@@ -484,7 +557,7 @@
 </script>
 
 <!-- hexo injector body_end start --><script src="https://cdn.jsdelivr.net/npm/hexo-widget-tree@0.1.1/js/index.js"></script><style>#widget-tree-button{opacity:0}</style><div id="widget-tree">
-      <ul><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/">nlp</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/pretrained-language-model/">pretrained-language-model</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/04/28/nlp/pretrained-language-model/bert/" title="关于Bert的一切">关于Bert的一切</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BC%BA"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">为什么这么强</span></a></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="tree-post-toc-number">2.</span> <span class="tree-post-toc-text">整体结构</span></a></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="tree-post-toc-number">3.</span> <span class="tree-post-toc-text">训练方法</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Mask-Language-Model"><span class="tree-post-toc-number">3.1.</span> <span class="tree-post-toc-text">Mask Language Model</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Next-Sentence-Prediction"><span class="tree-post-toc-number">3.2.</span> <span class="tree-post-toc-text">Next Sentence Prediction</span></a></li></ol></li></ol></li></ul></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/python/">python</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/04/29/python/pre-commit/" title="pre-commit 工具">pre-commit 工具</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%80%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">一、快速上手</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-1-%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="tree-post-toc-number">1.1.</span> <span class="tree-post-toc-text">1.1 安装工具</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-2-%E5%AE%89%E8%A3%85hook%E8%84%9A%E6%9C%AC"><span class="tree-post-toc-number">1.2.</span> <span class="tree-post-toc-text">1.2 安装hook脚本</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-3-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="tree-post-toc-number">1.3.</span> <span class="tree-post-toc-text">1.3 配置文件</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-4-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="tree-post-toc-number">1.4.</span> <span class="tree-post-toc-text">1.4 参数说明</span></a></li></ol></li></ol></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/skills/">skills</a><ul class="tree-list-children"><li class="tree-list-item"><a class="tree-list-post-link" href="/2021/05/01/skills/how-to-write-readme/" title="如何编写一个好的README"><i class="post-icon gg-file-document"></i>如何编写一个好的README</a></li><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/05/01/skills/technical-writer/" title="Technical Writer">Technical Writer</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFTechnical-Writer"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">什么是Technical Writer</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="tree-post-toc-number">1.1.</span> <span class="tree-post-toc-text">概念</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Technical-Writer-%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="tree-post-toc-number">1.2.</span> <span class="tree-post-toc-text">Technical Writer 的目的</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%80%E5%AE%9A%E8%A6%81%E6%88%90%E4%B8%BATechnical-Writer"><span class="tree-post-toc-number">2.</span> <span class="tree-post-toc-text">一定要成为Technical Writer</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E6%9C%80%E5%A5%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="tree-post-toc-number">2.1.</span> <span class="tree-post-toc-text">最好的学习方法</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E8%A1%8C%E5%8A%A8%E5%8A%9B"><span class="tree-post-toc-number">2.2.</span> <span class="tree-post-toc-text">行动力</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%8F%AF%E8%83%BD%E6%80%A7"><span class="tree-post-toc-number">2.3.</span> <span class="tree-post-toc-text">可能性</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E8%87%AA%E5%88%B6%E5%8A%9B"><span class="tree-post-toc-number">2.4.</span> <span class="tree-post-toc-text">自制力</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E4%B8%80%E4%B8%AATechnical-Writer%EF%BC%9F"><span class="tree-post-toc-number">3.</span> <span class="tree-post-toc-text">如何成为一个Technical Writer？</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%A7"><span class="tree-post-toc-number">3.1.</span> <span class="tree-post-toc-text">系统性</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%B0%91%E7%82%B9%E6%8B%98%E6%9D%9F"><span class="tree-post-toc-number">3.2.</span> <span class="tree-post-toc-text">少点拘束</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%8D%9A%E6%96%87%E4%B8%8D%E6%98%AF%E4%B8%80%E8%B9%B4%E8%80%8C%E5%B0%B1"><span class="tree-post-toc-number">3.3.</span> <span class="tree-post-toc-text">博文不是一蹴而就</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AF%9D"><span class="tree-post-toc-number">4.</span> <span class="tree-post-toc-text">给自己的话</span></a></li></ol></li></ul></li></ul>
+      <ul><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/">nlp</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/components/">components</a><ul class="tree-list-children"><li class="tree-list-item"><a class="tree-list-post-link" href="/2021/05/08/nlp/components/attention/" title="Attention"><i class="post-icon gg-file-document"></i>Attention</a></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/papers/">papers</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/05/07/nlp/papers/few-shot/" title="few-shot papers">few-shot papers</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#2021"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">2021</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#PROTODA-EFFICIENT-TRANSFER-LEARNING-FOR-FEW-SHOT-INTENT-CLASSIFICATION"><span class="tree-post-toc-number">1.1.</span> <span class="tree-post-toc-text">PROTODA: EFFICIENT TRANSFER LEARNING FOR FEW-SHOT INTENT CLASSIFICATION</span></a></li></ol></li></ol></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/nlp/pretrained-language-model/">pretrained-language-model</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/04/28/nlp/pretrained-language-model/bert/" title="关于Bert的一切">关于Bert的一切</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">解决了什么问题</span></a></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BC%BA"><span class="tree-post-toc-number">2.</span> <span class="tree-post-toc-text">为什么这么强</span></a></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="tree-post-toc-number">3.</span> <span class="tree-post-toc-text">整体结构</span></a></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#Transformer"><span class="tree-post-toc-number">4.</span> <span class="tree-post-toc-text">Transformer</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="tree-post-toc-number">4.1.</span> <span class="tree-post-toc-text">问题定义</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E6%B5%81%E5%90%91"><span class="tree-post-toc-number">4.2.</span> <span class="tree-post-toc-text">数据的流向</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E8%BE%93%E5%85%A5%E8%A1%A8%E7%A4%BA"><span class="tree-post-toc-number">4.3.</span> <span class="tree-post-toc-text">输入表示</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Encoder-Layer"><span class="tree-post-toc-number">4.4.</span> <span class="tree-post-toc-text">Encoder Layer</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="tree-post-toc-number">5.</span> <span class="tree-post-toc-text">训练方法</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Mask-Language-Model"><span class="tree-post-toc-number">5.1.</span> <span class="tree-post-toc-text">Mask Language Model</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Next-Sentence-Prediction"><span class="tree-post-toc-number">5.2.</span> <span class="tree-post-toc-text">Next Sentence Prediction</span></a></li></ol></li></ol></li></ul></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/python/">python</a><ul class="tree-list-children"><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/04/29/python/pre-commit/" title="pre-commit 工具">pre-commit 工具</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%80%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">一、快速上手</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-1-%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="tree-post-toc-number">1.1.</span> <span class="tree-post-toc-text">1.1 安装工具</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-2-%E5%AE%89%E8%A3%85hook%E8%84%9A%E6%9C%AC"><span class="tree-post-toc-number">1.2.</span> <span class="tree-post-toc-text">1.2 安装hook脚本</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-3-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="tree-post-toc-number">1.3.</span> <span class="tree-post-toc-text">1.3 配置文件</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#1-4-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="tree-post-toc-number">1.4.</span> <span class="tree-post-toc-text">1.4 参数说明</span></a></li></ol></li></ol></li></ul></li><li class="tree-list-item"><i class="toggle-post-icon gg-folder-add"></i><a class="tree-list-link" href="/categories/skills/">skills</a><ul class="tree-list-children"><li class="tree-list-item"><a class="tree-list-post-link" href="/2021/05/01/skills/how-to-write-readme/" title="如何编写一个好的README"><i class="post-icon gg-file-document"></i>如何编写一个好的README</a></li><li class="tree-list-item"><i class="toggle-toc-icon gg-file-add"></i><a class="tree-list-post-link" href="/2021/05/01/skills/technical-writer/" title="Technical Writer">Technical Writer</a><ol class="tree-post-toc"><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFTechnical-Writer"><span class="tree-post-toc-number">1.</span> <span class="tree-post-toc-text">什么是Technical Writer</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="tree-post-toc-number">1.1.</span> <span class="tree-post-toc-text">概念</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#Technical-Writer-%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="tree-post-toc-number">1.2.</span> <span class="tree-post-toc-text">Technical Writer 的目的</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E4%B8%80%E5%AE%9A%E8%A6%81%E6%88%90%E4%B8%BATechnical-Writer"><span class="tree-post-toc-number">2.</span> <span class="tree-post-toc-text">一定要成为Technical Writer</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E6%9C%80%E5%A5%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="tree-post-toc-number">2.1.</span> <span class="tree-post-toc-text">最好的学习方法</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E8%A1%8C%E5%8A%A8%E5%8A%9B"><span class="tree-post-toc-number">2.2.</span> <span class="tree-post-toc-text">行动力</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%8F%AF%E8%83%BD%E6%80%A7"><span class="tree-post-toc-number">2.3.</span> <span class="tree-post-toc-text">可能性</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E8%87%AA%E5%88%B6%E5%8A%9B"><span class="tree-post-toc-number">2.4.</span> <span class="tree-post-toc-text">自制力</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E4%B8%80%E4%B8%AATechnical-Writer%EF%BC%9F"><span class="tree-post-toc-number">3.</span> <span class="tree-post-toc-text">如何成为一个Technical Writer？</span></a><ol class="tree-post-toc-child"><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%A7"><span class="tree-post-toc-number">3.1.</span> <span class="tree-post-toc-text">系统性</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%B0%91%E7%82%B9%E6%8B%98%E6%9D%9F"><span class="tree-post-toc-number">3.2.</span> <span class="tree-post-toc-text">少点拘束</span></a></li><li class="tree-post-toc-item tree-post-toc-level-3"><a class="tree-post-toc-link" href="#%E5%8D%9A%E6%96%87%E4%B8%8D%E6%98%AF%E4%B8%80%E8%B9%B4%E8%80%8C%E5%B0%B1"><span class="tree-post-toc-number">3.3.</span> <span class="tree-post-toc-text">博文不是一蹴而就</span></a></li></ol></li><li class="tree-post-toc-item tree-post-toc-level-2"><a class="tree-post-toc-link" href="#%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AF%9D"><span class="tree-post-toc-number">4.</span> <span class="tree-post-toc-text">给自己的话</span></a></li></ol></li></ul></li></ul>
         <div id="widget-tree-button">
           <i class="gg-chevron-right"></i>
         </div>
